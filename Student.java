@@ -3,14 +3,14 @@ public class Student{
     private String name;
     private String email;
     private String phone;
-    private String faculty;
+    private Grade grade;
 
-    public Student(int id, String name, String email, String phone, String faculty){
+    public Student(int id, String name, String email, String phone, Grade grade){
         this.id = id;
         this.name = name;
         this.email = email;
         this.phone = phone;
-        this.faculty = faculty;
+        this.grade = grade;
     }
 
     public int getID() { 
@@ -19,6 +19,22 @@ public class Student{
 
     public String getName() {
         return name;
+    }
+
+    public String getEmail(){
+        return email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setGrade(Grade grade){
+        this.grade = grade;
+    }
+
+    public Grade getGrade() {
+        return grade;
     }
 
 }
