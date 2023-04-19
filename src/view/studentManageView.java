@@ -312,6 +312,6 @@ public class studentManageView extends JFrame {
 
 	public void update(Student sinhvien) {
 		// TODO Auto-generated method stub
-		
+		return;
 	}
 }
