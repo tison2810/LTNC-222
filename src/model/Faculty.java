@@ -1,7 +1,7 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.Objects;
+import java.util.ArrayList;
 
 public class Faculty {
 	private String maKhoa;
@@ -82,7 +82,7 @@ public class Faculty {
 		}
 		return facultyList;
 	}
-	
+
 	public static Faculty getFacultybyName(String nameFaculty) {
 		ArrayList<Faculty> dsKhoa = getFacultyList();
 		for (int i =0; i < dsKhoa.size(); i++) {
@@ -93,15 +93,4 @@ public class Faculty {
 		}
 		return null;
 	}
-
-	public static Faculty getFacultyByName(String nameFaculty) {
-		ArrayList<Faculty> dsKhoa = getFacultyList();
-		for (int i =0; i < dsKhoa.size(); i++) {
-			if(nameFaculty.equals(dsKhoa.get(i).getTenKhoa())) {
-				return dsKhoa.get(i);
-			}
-		}
-		return null;
-	}
-	
 }
