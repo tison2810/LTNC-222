@@ -24,7 +24,6 @@ public class QLSVController implements Action{
 		String actionCommand = e.getActionCommand();
 		if(actionCommand.equals("Thêm")) {
 			this.view.deleteForm();
-			this.view.system.setChoose("Thêm");
 		}
 		else if(actionCommand.equals("Lưu")) {
 			try {
@@ -45,34 +44,18 @@ public class QLSVController implements Action{
 				float gpa_4 = Float.valueOf(this.view.textField_GPA4.getText());
 				
 				Student sinhvien = new Student(MSSV, hoTen, Khoa, ngaySinh, gioiTinh, TCTL, gpa_10, gpa_4);
-				
-				if(this.view.system.getChoose().equals("") || this.view.system.getChoose().equals("Thêm")) {
-					if(gpa_4 < 0.0 || gpa_4 > 4.0) {
-						JOptionPane.showMessageDialog(view, "GPA(hệ 4.0) phải nằm trong khoảng 0 - 4.0");
-					}
-					else if(gpa_10 < 0.0 || gpa_10 > 10.0) {
-						JOptionPane.showMessageDialog(view, "GPA(hệ 10.0) phải nằm trong khoảng 0 - 10.0");
-					}
-					else if(TCTL < 0) {
-						JOptionPane.showMessageDialog(view, "Tín chỉ tích lũy phải lớn hơn bằng 0");
-					}
-					else {
-						this.view.insert(sinhvien);
-					}
+
+				if(gpa_4 < 0.0 || gpa_4 > 4.0) {
+					JOptionPane.showMessageDialog(view, "GPA(hệ 4.0) phải nằm trong khoảng 0 - 4.0");
 				}
-				else if(this.view.system.getChoose().equals("Cập nhật")){
-					if(gpa_4 < 0.0 || gpa_4 > 4.0) {
-						JOptionPane.showMessageDialog(view, "GPA(hệ 4.0) phải nằm trong khoảng 0 - 4.0");
-					}
-					else if(gpa_10 < 0.0 || gpa_10 > 10.0) {
-						JOptionPane.showMessageDialog(view, "GPA(hệ 10.0) phải nằm trong khoảng 0 - 10.0");
-					}
-					else if(TCTL < 0) {
-						JOptionPane.showMessageDialog(view, "Tín chỉ tích lũy phải lớn hơn bằng 0");
-					}
-					else {
-						this.view.update(sinhvien);
-					}
+				else if(gpa_10 < 0.0 || gpa_10 > 10.0) {
+					JOptionPane.showMessageDialog(view, "GPA(hệ 10.0) phải nằm trong khoảng 0 - 10.0");
+				}
+				else if(TCTL < 0) {
+					JOptionPane.showMessageDialog(view, "Tín chỉ tích lũy phải lớn hơn bằng 0");
+				}
+				else {
+					this.view.insertOrUpdate(sinhvien);
 				}
 			} catch (Exception e2) {
 				e2.printStackTrace();
@@ -80,7 +63,6 @@ public class QLSVController implements Action{
 		}
 		else if(actionCommand.equals("Cập nhật")) {
 			this.view.display();
-			this.view.system.setChoose("Cập nhật");
 		}
 		else if(actionCommand.equals("Xóa")) {
 			this.view.delete();

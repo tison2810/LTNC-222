@@ -4,11 +4,9 @@ import java.util.ArrayList;
 
 public class QLSVSystem {
 	private ArrayList<Student> dsSinhVien;
-	private String choose;
 
 	public QLSVSystem() {
 		this.dsSinhVien = new ArrayList<Student>();
-		this.choose = "";
 	}
 
 	public QLSVSystem(ArrayList<Student> dsSinhVien) {
@@ -21,14 +19,6 @@ public class QLSVSystem {
 
 	public void setDsSinhVien(ArrayList<Student> dsSinhVien) {
 		this.dsSinhVien = dsSinhVien;
-	}
-	
-	public String getChoose() {
-		return choose;
-	}
-
-	public void setChoose(String choose) {
-		this.choose = choose;
 	}
 
 	public void insert(Student SinhVien) {
@@ -44,10 +34,12 @@ public class QLSVSystem {
 		this.dsSinhVien.add(SinhVien);
 	}
 
+	//Kiem tra sinh vien co ton tai trong he thong hay chua
 	public boolean checkExist(Student sinhvien) {
 		for(Student sv : dsSinhVien) {
-			if(sv.getMSSV() == sinhvien.getMSSV())
+			if(sv.getMSSV().equals(sinhvien.getMSSV())) {
 				return true;
+			}
 		}
 		return false;
 	}

@@ -316,13 +316,34 @@ public class QLSVView extends JFrame {
 		btn_gioiTinh.clearSelection();
 	}
 	
-	public void insert(Student sinhvien) {
-		this.system.insert(sinhvien);
+	//Neu sinh vien chua ton tai thi them vao he thong. Nguoc lai thi ta cap nhat thong tin sinh vien.
+	public void insertOrUpdate(Student sinhvien) {
 		DefaultTableModel model_table = (DefaultTableModel) table.getModel();
-		model_table.addRow(new Object[] {sinhvien.getHoTen(), sinhvien.getKhoa().getTenKhoa(), 
-									sinhvien.getMSSV()+"", (sinhvien.getNgaySinh().getMonth()+1)+"/"+(sinhvien.getNgaySinh().getDate())+"/"+(sinhvien.getNgaySinh().getYear()+1900),
-									(sinhvien.isGioiTinh()?"Nam":"Nữ"),sinhvien.getTCTL()+"",
-									sinhvien.getGpa_4()+"",sinhvien.getGpa_10()+""});
+		if(!this.system.checkExist(sinhvien)) {
+			this.system.insert(sinhvien);
+			model_table.addRow(new Object[] {sinhvien.getHoTen(), sinhvien.getKhoa().getTenKhoa(), 
+										sinhvien.getMSSV()+"", (sinhvien.getNgaySinh().getMonth()+1)+"/"+(sinhvien.getNgaySinh().getDate())+"/"+(sinhvien.getNgaySinh().getYear()+1900),
+										(sinhvien.isGioiTinh()?"Nam":"Nữ"),sinhvien.getTCTL()+"",
+										sinhvien.getGpa_4()+"",sinhvien.getGpa_10()+""});
+		}
+		else {
+			this.system.update(sinhvien);
+			int numOfRow = table.getRowCount();
+			for(int i = 0; i < numOfRow; i++) {
+				String mSSV = model_table.getValueAt(i, 2)+"";
+				if(mSSV.equals(sinhvien.getMSSV())){
+					model_table.setValueAt(sinhvien.getHoTen(), i, 0);
+					model_table.setValueAt(sinhvien.getKhoa().getTenKhoa(), i, 1);
+					model_table.setValueAt(sinhvien.getMSSV(), i, 2);
+					model_table.setValueAt((sinhvien.getNgaySinh().getMonth()+1) + "/" + (sinhvien.getNgaySinh().getDate()) + "/"
+							+ (sinhvien.getNgaySinh().getYear() + 1900) + "", i, 3);
+					model_table.setValueAt((sinhvien.isGioiTinh()?"Nam":"Nữ"), i, 4);
+					model_table.setValueAt(sinhvien.getTCTL(), i, 5);
+					model_table.setValueAt(sinhvien.getGpa_4(), i, 6);
+					model_table.setValueAt(sinhvien.getGpa_10(), i, 7);
+				}
+			}
+		}
 	}
 	
 	public void display() {
@@ -354,21 +375,6 @@ public class QLSVView extends JFrame {
 			RadioButton_Nu.setSelected(true);
 	}
 
-	public void update(Student sinhvien) {
-		this.system.update(sinhvien);
-		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-		int row = table.getSelectedRow();
-		
-		tableModel.setValueAt(sinhvien.getHoTen(), row, 0);
-		tableModel.setValueAt(sinhvien.getKhoa().getTenKhoa(), row, 1);
-		tableModel.setValueAt(sinhvien.getMSSV(), row, 2);
-		tableModel.setValueAt((sinhvien.getNgaySinh().getMonth()+1) + "/" + (sinhvien.getNgaySinh().getDate()) + "/"
-				+ (sinhvien.getNgaySinh().getYear() + 1900) + "", row, 3);
-		tableModel.setValueAt((sinhvien.isGioiTinh()?"Nam":"Nữ"), row, 4);
-		tableModel.setValueAt(sinhvien.getTCTL(), row, 5);
-		tableModel.setValueAt(sinhvien.getGpa_4(), row, 6);
-		tableModel.setValueAt(sinhvien.getGpa_10(), row, 7);
-	}
 
 	public Student getStudent() {
 		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
