@@ -9,11 +9,17 @@ import javax.swing.JOptionPane;
 
 import model.Faculty;
 import model.Student;
+import view.QLSVLogin;
 import view.QLSVView;
 
 public class QLSVController implements Action{
 
 	public QLSVView view;
+	public QLSVLogin login;
+	
+	public QLSVController(QLSVLogin login) {
+		this.login = login;
+	}
 	
 	public QLSVController(QLSVView view) {
 		this.view = view;
@@ -22,6 +28,9 @@ public class QLSVController implements Action{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String actionCommand = e.getActionCommand();
+		if(actionCommand.equals("Đăng nhập")) {
+			this.login.loginView();
+		}
 		if(actionCommand.equals("Thêm")) {
 			this.view.deleteForm();
 		}

@@ -2,13 +2,13 @@ package test;
 
 import javax.swing.UIManager;
 
-import view.QLSVView;
+import view.QLSVLogin;
 
 public class Test{
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			new QLSVView();
+			new QLSVLogin();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
