@@ -4,22 +4,43 @@ import java.util.ArrayList;
 
 public class QLSVSystem {
 	private ArrayList<Student> dsSinhVien;
+	String choosen;
 
 	public QLSVSystem() {
 		this.dsSinhVien = new ArrayList<Student>();
 	}
 
-	public QLSVSystem(ArrayList<Student> dsSinhVien) {
+
+
+	public QLSVSystem(ArrayList<Student> dsSinhVien, String choosen) {
 		this.dsSinhVien = dsSinhVien;
+		this.choosen = choosen;
 	}
+
 
 	public ArrayList<Student> getDsSinhVien() {
 		return dsSinhVien;
 	}
+	
+
 
 	public void setDsSinhVien(ArrayList<Student> dsSinhVien) {
 		this.dsSinhVien = dsSinhVien;
 	}
+
+
+
+	public String getChoosen() {
+		return choosen;
+	}
+
+
+
+	public void setChoosen(String choosen) {
+		this.choosen = choosen;
+	}
+
+
 
 	public void insert(Student SinhVien) {
 		this.dsSinhVien.add(SinhVien);
