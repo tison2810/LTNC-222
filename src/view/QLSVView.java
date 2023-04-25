@@ -24,6 +24,8 @@ import controller.QLSVController;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -38,18 +40,19 @@ public class QLSVView extends JFrame {
 
 	private JPanel contentPane;
 	public QLSVSystem system;
-	public JTable table;
-	public JTextField textField;
-	public JTextField textField_Name;
-	public JTextField textField_Birth;
-	public JTextField textField_MSSV;
-	public JTextField textField_TCTL;
-	public JTextField textField_GPA4;
-	public JTextField textField_GPA10;
-	public ButtonGroup btn_gioiTinh;
-	public JComboBox comboBox_Khoa_info;
-	public JRadioButton RadioButton_Nam;
-	public JRadioButton RadioButton_Nu;
+	private JTable table;
+	private JTextField MSSV_find;
+	private JTextField textField_Name;
+	private JTextField textField_Birth;
+	private JTextField textField_MSSV;
+	private JTextField textField_TCTL;
+	private JTextField textField_GPA4;
+	private JTextField textField_GPA10;
+	private ButtonGroup btn_gioiTinh;
+	private JComboBox comboBox_Khoa_info;
+	private JRadioButton RadioButton_Nam;
+	private JRadioButton RadioButton_Nu;
+	private JComboBox comboBox_Khoa_find;
 
 	/**
 	 * Launch the application.
@@ -140,7 +143,7 @@ public class QLSVView extends JFrame {
 		lblNewLabel_1.setBounds(76, 265, 94, 28);
 		contentPane.add(lblNewLabel_1);
 		
-		JComboBox comboBox_Khoa_find = new JComboBox();
+		comboBox_Khoa_find = new JComboBox();
 		comboBox_Khoa_find.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		ArrayList<Faculty> facultyList = Faculty.getFacultyList();
 		comboBox_Khoa_find.addItem("");
@@ -155,11 +158,11 @@ public class QLSVView extends JFrame {
 		lblNewLabel_2.setBounds(555, 265, 70, 28);
 		contentPane.add(lblNewLabel_2);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField.setBounds(622, 265, 215, 28);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		MSSV_find = new JTextField();
+		MSSV_find.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		MSSV_find.setBounds(622, 265, 215, 28);
+		contentPane.add(MSSV_find);
+		MSSV_find.setColumns(10);
 		
 		JLabel lblNewLabel_3 = new JLabel("Thông tin sinh viên");
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -265,10 +268,11 @@ public class QLSVView extends JFrame {
 		textField_GPA10.setBounds(650, 475, 274, 38);
 		contentPane.add(textField_GPA10);
 		
-		JButton btnNewButton = new JButton("Tìm");
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnNewButton.setBounds(855, 262, 79, 38);
-		contentPane.add(btnNewButton);
+		JButton btnFind = new JButton("Tìm");
+		btnFind.addActionListener(action);
+		btnFind.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnFind.setBounds(855, 262, 79, 38);
+		contentPane.add(btnFind);
 		
 		JButton btnInsert = new JButton("Thêm");
 		btnInsert.addActionListener(action);
@@ -316,15 +320,56 @@ public class QLSVView extends JFrame {
 		btn_gioiTinh.clearSelection();
 	}
 	
+	//Thuc hien luu thong tin sinh vien
+	public void store() {
+		//GetData
+		String MSSV = this.textField_MSSV.getText();
+		String hoTen = this.textField_Name.getText();
+		Faculty Khoa = Faculty.getFacultybyName(this.comboBox_Khoa_info.getSelectedItem().toString() + "");
+		Date ngaySinh = new Date(this.textField_Birth.getText());
+		boolean gioiTinh = true;
+		if(this.RadioButton_Nam.isSelected()) {
+			gioiTinh = true;
+		}
+		else {
+			gioiTinh = false;
+		}
+		int TCTL = Integer.valueOf(this.textField_TCTL.getText());
+		float gpa_10 = Float.valueOf(this.textField_GPA10.getText());
+		float gpa_4 = Float.valueOf(this.textField_GPA4.getText());
+		
+		Student sinhvien = new Student(MSSV, hoTen, Khoa, ngaySinh, gioiTinh, TCTL, gpa_10, gpa_4);
+
+		if(gpa_4 < 0.0 || gpa_4 > 4.0) {
+			JOptionPane.showMessageDialog(this, "GPA(hệ 4.0) phải nằm trong khoảng 0 - 4.0");
+		}
+		else if(gpa_10 < 0.0 || gpa_10 > 10.0) {
+			JOptionPane.showMessageDialog(this, "GPA(hệ 10.0) phải nằm trong khoảng 0 - 10.0");
+		}
+		else if(TCTL < 0) {
+			JOptionPane.showMessageDialog(this, "Tín chỉ tích lũy phải lớn hơn bằng 0");
+		}
+		else {
+			this.insertOrUpdate(sinhvien);
+		}
+		
+	}
+	
+	//Them sinh vien vao bang
+	public void insert(Student sinhvien) {
+		DefaultTableModel model_table = (DefaultTableModel) table.getModel();
+		model_table.addRow(new Object[] {sinhvien.getHoTen(), sinhvien.getKhoa().getTenKhoa(), 
+				sinhvien.getMSSV()+"", (sinhvien.getNgaySinh().getMonth()+1)+"/"+(sinhvien.getNgaySinh().getDate())+"/"+(sinhvien.getNgaySinh().getYear()+1900),
+				(sinhvien.isGioiTinh()?"Nam":"Nữ"),sinhvien.getTCTL()+"",
+				sinhvien.getGpa_4()+"",sinhvien.getGpa_10()+""});
+	}
+	
 	//Neu sinh vien chua ton tai thi them vao he thong. Nguoc lai thi ta cap nhat thong tin sinh vien.
 	public void insertOrUpdate(Student sinhvien) {
 		DefaultTableModel model_table = (DefaultTableModel) table.getModel();
 		if(!this.system.checkExist(sinhvien)) {
 			this.system.insert(sinhvien);
-			model_table.addRow(new Object[] {sinhvien.getHoTen(), sinhvien.getKhoa().getTenKhoa(), 
-										sinhvien.getMSSV()+"", (sinhvien.getNgaySinh().getMonth()+1)+"/"+(sinhvien.getNgaySinh().getDate())+"/"+(sinhvien.getNgaySinh().getYear()+1900),
-										(sinhvien.isGioiTinh()?"Nam":"Nữ"),sinhvien.getTCTL()+"",
-										sinhvien.getGpa_4()+"",sinhvien.getGpa_10()+""});
+			this.insert(sinhvien);
 		}
 		else {
 			this.system.update(sinhvien);
@@ -346,6 +391,7 @@ public class QLSVView extends JFrame {
 		}
 	}
 	
+	//Hien thi thong tin sinh vien
 	public void display() {
 		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
 		int row = table.getSelectedRow();
@@ -375,7 +421,7 @@ public class QLSVView extends JFrame {
 			RadioButton_Nu.setSelected(true);
 	}
 
-
+	//Lay thong tin sinh vien dang chon
 	public Student getStudent() {
 		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
 		int row = table.getSelectedRow();
@@ -395,6 +441,7 @@ public class QLSVView extends JFrame {
 		return sinhvien;
 	}
 	
+	//Xoa sinh vien khoi he thong
 	public void delete() {
 		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
 		int row = table.getSelectedRow();
@@ -404,6 +451,67 @@ public class QLSVView extends JFrame {
 			this.system.delete(sinhvien);
 			tableModel.removeRow(row);
 		}
+	}
+
+	//Tim kiem sinh vien trong he thong
+	public void find() {
+		String tenKhoa_find = this.comboBox_Khoa_find.getSelectedItem().toString() + "";
+		String MSSV_find = this.MSSV_find.getText();
+		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+		int numOfRow = tableModel.getRowCount();
+		Set<String> deleteStudentsID = new TreeSet<String>();
+		if(!tenKhoa_find.equals("")) {
+			for(int i = 0; i < numOfRow; i++ ) {
+				String tenkhoa = tableModel.getValueAt(i, 1) + "";
+				String MSSV = tableModel.getValueAt(i, 2) + "";
+				if(!tenkhoa.equals(tenKhoa_find)) {
+					deleteStudentsID.add(MSSV);
+				}
+			}
+		}
+		
+		if(MSSV_find.length() > 0) {
+			for(int i = 0; i < numOfRow; i++) {
+				String MSSV = tableModel.getValueAt(i, 2) + "";
+				if(!MSSV.equals(MSSV_find)) {
+					deleteStudentsID.add(MSSV);
+				}
+			}
+		}
+		
+		for(String MSSVdelete : deleteStudentsID) {
+			numOfRow = tableModel.getRowCount();
+			for(int i = 0; i < numOfRow; i++) {
+				String MSSV = tableModel.getValueAt(i, 2) + "";
+				if(MSSV.equals(MSSVdelete)) {
+					try {
+						tableModel.removeRow(i);
+					} catch (Exception e){
+						e.printStackTrace();
+					}
+					break;
+				}
+			}
+		}
+	}
+
+	public void cancelFind() {
+		while (true) {
+			DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+			int numOfRow = tableModel.getRowCount();
+			if(numOfRow == 0)
+				break;
+			else
+				try {
+					tableModel.removeRow(0);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		}
+		for (Student sinhvien : this.system.getDsSinhVien()) {
+			this.insert(sinhvien);
+		}
+		
 	}
 	
 
