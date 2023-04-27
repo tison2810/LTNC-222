@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
 	<name>StudentManage</name>
+=======
+	<name>LTNC</name>
+>>>>>>> 850e72837a355bc02d4184a5e3f5fcdd3d42a054
 	<comment></comment>
 	<projects>
 	</projects>
@@ -16,7 +20,11 @@
 	</natures>
 	<filteredResources>
 		<filter>
+<<<<<<< HEAD
 			<id>1681872078287</id>
+=======
+			<id>1681670298964</id>
+>>>>>>> 850e72837a355bc02d4184a5e3f5fcdd3d42a054
 			<name></name>
 			<type>30</type>
 			<matcher>

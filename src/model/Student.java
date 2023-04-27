@@ -107,5 +107,4 @@ public class Student implements Serializable{
 	public void setGpa_4(float gpa_4) {
 		this.gpa_4 = gpa_4;
 	}
-	
 }
