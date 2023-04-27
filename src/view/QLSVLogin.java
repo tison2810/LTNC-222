@@ -20,8 +20,9 @@ import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 
 public class QLSVLogin extends JFrame {
@@ -108,7 +109,7 @@ public class QLSVLogin extends JFrame {
 			Connection con =DriverManager.getConnection("jdbc:mysql://localhost:3306/test_1","root","");
 			
 			Statement stm = con.createStatement();
-			String query = "SELECT * FROM qlsv WHERE ID = '"+username+"'  AND Pass = '"+password+"'";
+			String query = "SELECT * FROM qlsv WHERE MSSV = '"+username+"'  AND Pass = '"+password+"'";
 		    ResultSet rs = stm.executeQuery(query);
 		    if (rs.next()) {
 		       	new QLSVView();
