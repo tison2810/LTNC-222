@@ -112,7 +112,7 @@ public class QLSVLogin extends JFrame {
 			String query = "SELECT * FROM qlsv WHERE MSSV = '"+username+"'  AND Pass = '"+password+"'";
 		    ResultSet rs = stm.executeQuery(query);
 		    if (rs.next()) {
-		       	new QLSVView();
+		       	new QLSVView();	
 		       	dispose();
 		       
 		    } else {

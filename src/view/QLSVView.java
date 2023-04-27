@@ -42,6 +42,16 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+
 public class QLSVView extends JFrame {
 
 	private JPanel contentPane;
@@ -384,6 +394,7 @@ public class QLSVView extends JFrame {
 		if(!this.system.checkExist(sinhvien)) {
 			this.system.insert(sinhvien);
 			this.insert(sinhvien);
+			this.addStudentToMySQL(sinhvien);
 		}
 		else {
 			this.system.update(sinhvien);
@@ -402,6 +413,8 @@ public class QLSVView extends JFrame {
 					model_table.setValueAt(sinhvien.getGpa_10(), i, 7);
 				}
 			}
+			this.deleteStudentFromMySQL(sinhvien);
+			this.addStudentToMySQL(sinhvien);
 		}
 	}
 	
@@ -464,6 +477,7 @@ public class QLSVView extends JFrame {
 			Student sinhvien = getStudent();
 			this.system.delete(sinhvien);
 			tableModel.removeRow(row);
+			this.deleteStudentFromMySQL(sinhvien);
 		}
 	}
 
@@ -608,5 +622,49 @@ public class QLSVView extends JFrame {
 			e.printStackTrace();
 		}
 	}
+	
+	public boolean addStudentToMySQL(Student stu) {
+		String sqlQuery = "INSERT INTO qlsv (`Họ và tên`, Khoa, MSSV, `Ngày sinh`, `Giới tính`, `Tín chỉ tích lũy`, `GPA (hệ 4)`, `GPA (hệ 10)`, Pass, Mail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		try {
+			Connection con =DriverManager.getConnection("jdbc:mysql://localhost:3306/test_1","root","");
+			PreparedStatement ps = con.prepareStatement(sqlQuery);
+			ps.setString(1, stu.getHoTen());
+			ps.setString(2, stu.getKhoa().getTenKhoa());
+			ps.setString(3, stu.getMSSV());
+			ps.setString(4, (stu.getNgaySinh().getMonth()+1)+"/"+(stu.getNgaySinh().getDate())+"/"+(stu.getNgaySinh().getYear()+1900));
+			ps.setString(5, stu.isGioiTinh()?"Nam":"Nữ");
+			ps.setInt(6, stu.getTCTL());
+			ps.setFloat(7, stu.getGpa_4());
+			ps.setFloat(8, stu.getGpa_10());
+			ps.setString(9, (stu.getNgaySinh().getMonth()+1)+stu.getMSSV()+(stu.getNgaySinh().getDate())+(stu.getNgaySinh().getYear()+1900));
+			//ps.setString(10, email(stu.getHoTen()));
+			return ps.executeUpdate()>0;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean deleteStudentFromMySQL(Student stu) {
+		String sqlQuery = "DELETE FROM qlsv WHERE MSSV = '" + stu.getMSSV() +"'";
+		try {
+			Connection con =DriverManager.getConnection("jdbc:mysql://localhost:3306/test_1","root","");
+			PreparedStatement ps = con.prepareStatement(sqlQuery);
+			ps.setString(1, stu.getMSSV());
+			return ps.executeUpdate()>0;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	
+//	 public String email(String s) {
+//		  
+//		  String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
+//		  Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+//		  String name = pattern.matcher(temp).replaceAll("");
+//		  return name.toLowerCase().replaceAll("\\s", ".") + "@hcmut.edu.vn";
+//		 }
 
 }
