@@ -16,12 +16,18 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JFileChooser;
 
 import model.Faculty;
 import model.QLSVSystem;
 import model.Student;
 import controller.QLSVController;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
@@ -88,27 +94,23 @@ public class QLSVView extends JFrame {
 		menuBar.add(menuFile);
 		
 		JMenuItem menuOpen = new JMenuItem("Open");
-		menuOpen.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		menuOpen.addActionListener(action);
+		menuOpen.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuFile.add(menuOpen);
 		
-		JMenuItem menuClose = new JMenuItem("Close");
-		menuClose.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		menuFile.add(menuClose);
+		JMenuItem menuSave = new JMenuItem("Save");
+		menuSave.addActionListener(action);
+		menuSave.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuFile.add(menuSave);
+		
+
+		JMenuItem menuExit = new JMenuItem("Exit");
+		menuExit.addActionListener(action);
 		
 		JSeparator separator = new JSeparator();
 		menuFile.add(separator);
-		
-		JMenuItem menuExit = new JMenuItem("Exit");
-		menuExit.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		menuExit.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuFile.add(menuExit);
-		
-		JMenu menuAbout = new JMenu("About");
-		menuAbout.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuBar.add(menuAbout);
-		
-		JMenuItem mntmNewMenuItem = new JMenuItem("About Me");
-		mntmNewMenuItem.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		menuAbout.add(mntmNewMenuItem);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -131,11 +133,11 @@ public class QLSVView extends JFrame {
 		table.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(47, 53, 935, 187);
+		scrollPane.setBounds(30, 53, 935, 187);
 		contentPane.add(scrollPane);
 		
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(30, 251, 952, 21);
+		separator_1.setBounds(30, 245, 952, 21);
 		contentPane.add(separator_1);
 		
 		JLabel lblNewLabel_1 = new JLabel("KHOA");
@@ -155,12 +157,12 @@ public class QLSVView extends JFrame {
 		
 		JLabel lblNewLabel_2 = new JLabel("MSSV");
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblNewLabel_2.setBounds(555, 265, 70, 28);
+		lblNewLabel_2.setBounds(486, 265, 70, 28);
 		contentPane.add(lblNewLabel_2);
 		
 		MSSV_find = new JTextField();
 		MSSV_find.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		MSSV_find.setBounds(622, 265, 215, 28);
+		MSSV_find.setBounds(546, 267, 215, 28);
 		contentPane.add(MSSV_find);
 		MSSV_find.setColumns(10);
 		
@@ -271,8 +273,14 @@ public class QLSVView extends JFrame {
 		JButton btnFind = new JButton("Tìm");
 		btnFind.addActionListener(action);
 		btnFind.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnFind.setBounds(855, 262, 79, 38);
+		btnFind.setBounds(779, 260, 79, 38);
 		contentPane.add(btnFind);
+		
+		JButton btnFindCancel = new JButton("Hủy tìm");
+		btnFindCancel.addActionListener(action);
+		btnFindCancel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnFindCancel.setBounds(868, 260, 97, 38);
+		contentPane.add(btnFindCancel);
 		
 		JButton btnInsert = new JButton("Thêm");
 		btnInsert.addActionListener(action);
@@ -303,6 +311,12 @@ public class QLSVView extends JFrame {
 		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnCancel.setBounds(779, 559, 123, 44);
 		contentPane.add(btnCancel);
+		
+		JButton btnBack = new JButton("Quay về");
+		btnBack.addActionListener(action);
+		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnBack.setBounds(0, 0, 113, 38);
+		contentPane.add(btnBack);
 		
 		
 		this.setVisible(true);
@@ -437,7 +451,7 @@ public class QLSVView extends JFrame {
 		float gpa_10 = Float.valueOf(tableModel.getValueAt(row, 7)+"");
 		float gpa_4 = Float.valueOf(tableModel.getValueAt(row, 6)+"");
 		
-		Student sinhvien = new Student(hoTen, MSSV, Khoa, ngaySinh, gioiTinh, TCTL, gpa_10, gpa_4);
+		Student sinhvien = new Student(MSSV, hoTen, Khoa, ngaySinh, gioiTinh, TCTL, gpa_10, gpa_4);
 		return sinhvien;
 	}
 	
@@ -455,6 +469,9 @@ public class QLSVView extends JFrame {
 
 	//Tim kiem sinh vien trong he thong
 	public void find() {
+		//Huy tim dang co truoc khi thuc hien tim
+		this.loadData();
+		//Thuc hien tim
 		String tenKhoa_find = this.comboBox_Khoa_find.getSelectedItem().toString() + "";
 		String MSSV_find = this.MSSV_find.getText();
 		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
@@ -495,7 +512,7 @@ public class QLSVView extends JFrame {
 		}
 	}
 
-	public void cancelFind() {
+	public void loadData() {
 		while (true) {
 			DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
 			int numOfRow = tableModel.getRowCount();
@@ -513,6 +530,83 @@ public class QLSVView extends JFrame {
 		}
 		
 	}
+
+	public void back() {
+		int luaChon = JOptionPane.showConfirmDialog(
+			    this,
+			    "Bạn có muốn quay lại menu",
+			    "Back",
+			    JOptionPane.YES_NO_OPTION);
+		if (luaChon == JOptionPane.YES_OPTION) {
+			new QLSVChoose();
+			dispose();
+		}
+	}
+
+	public void exit() {
+		int luaChon = JOptionPane.showConfirmDialog(
+			    this,
+			    "Bạn có muốn thoát khỏi chương trình?",
+			    "Exit",
+			    JOptionPane.YES_NO_OPTION);
+		if (luaChon == JOptionPane.YES_OPTION) {
+			System.exit(0);
+		}
+	}
 	
+	public void openFile() {
+		JFileChooser fc = new JFileChooser();
+		int returnVal = fc.showOpenDialog(this);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			open(file);
+			loadData();
+		} 
+	}
+
+	
+	public void open(File file) {
+		ArrayList ds = new ArrayList();
+		try {
+			this.system.setFileName(file.getAbsolutePath());
+			FileInputStream fis = new FileInputStream(file);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			Student sinhvien = null;
+			while((sinhvien = (Student) ois.readObject())!=null) {
+				ds.add(sinhvien);
+			}
+			ois.close();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		this.system.setDsSinhVien(ds);
+	}
+	
+	public void saveFile() {
+		if(this.system.getFileName().length()>0) {
+			save(this.system.getFileName());
+		}else {
+			JFileChooser fc = new JFileChooser();
+			int returnVal = fc.showSaveDialog(this);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = fc.getSelectedFile();
+				save(file.getAbsolutePath());
+			} 
+		}
+	}
+
+	private void save(String path) {
+		try {
+			this.system.setFileName(path);
+			FileOutputStream fos = new FileOutputStream(path);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			for (Student sinhvien : this.system.getDsSinhVien()) {
+				oos.writeObject(sinhvien);
+			}
+			oos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }

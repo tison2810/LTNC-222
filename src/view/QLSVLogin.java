@@ -24,8 +24,7 @@ public class QLSVLogin extends JFrame {
 
 	private JPanel contentPane;
 	public JTextField textField_username;
-	public JButton btnLogin;
-	public JPasswordField passwordField;
+	private JPasswordField passwordField;
 
 	/**
 	 * Launch the application.
@@ -86,7 +85,7 @@ public class QLSVLogin extends JFrame {
 		passwordField.setBounds(269, 268, 343, 43);
 		contentPane.add(passwordField);
 		
-		btnLogin = new JButton("Đăng nhập");
+		JButton btnLogin = new JButton("Đăng nhập");
 		btnLogin.addActionListener(action);
 		btnLogin.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnLogin.setBounds(350, 351, 143, 40);
@@ -96,12 +95,13 @@ public class QLSVLogin extends JFrame {
 		this.setVisible(true);
 	}
 
+	//Kiem tra thong tin dang nhap, neu dung thi dang nhap vao he thong
 	public void loginView() {
 		String username = this.textField_username.getText();
 		char[] passwordChar = this.passwordField.getPassword();
 		String password = new String(passwordChar);
 		if(username.equals("admin") && (password.equals("123"))) {
-			new QLSVView();
+			new QLSVChoose();
 			dispose();
 		}
 		else {
