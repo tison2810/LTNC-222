@@ -4,22 +4,39 @@ import java.util.ArrayList;
 
 public class QLSVSystem {
 	private ArrayList<Student> dsSinhVien;
+	private String fileName;
 
 	public QLSVSystem() {
 		this.dsSinhVien = new ArrayList<Student>();
+		this.fileName = "";
 	}
+
+
 
 	public QLSVSystem(ArrayList<Student> dsSinhVien) {
 		this.dsSinhVien = dsSinhVien;
 	}
 
+
 	public ArrayList<Student> getDsSinhVien() {
 		return dsSinhVien;
 	}
+	
+
 
 	public void setDsSinhVien(ArrayList<Student> dsSinhVien) {
 		this.dsSinhVien = dsSinhVien;
 	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 
 	public void insert(Student SinhVien) {
 		this.dsSinhVien.add(SinhVien);

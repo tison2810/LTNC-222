@@ -1,9 +1,10 @@
 package model;
 
 import java.util.Objects;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Faculty {
+public class Faculty implements Serializable {
 	private String maKhoa;
 	private String tenKhoa;
 	
