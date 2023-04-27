@@ -9,17 +9,31 @@ import javax.swing.JOptionPane;
 
 import model.Faculty;
 import model.Student;
+import view.QLSVChoose;
 import view.QLSVLogin;
 import view.QLSVView;
+import view.QLSVViewStudent;
 
 public class QLSVController implements Action{
 
-	public QLSVView view;
+	private QLSVView view;
 	
-	public QLSVLogin login;
+	private QLSVLogin login;
+	
+	private QLSVChoose chosen;
+	
+	private QLSVViewStudent viewstu;
 	
 	public QLSVController(QLSVLogin login) {
 		this.login = login;
+	}
+	
+	public QLSVController(QLSVChoose chosen) {
+		this.chosen = chosen;
+	}
+	
+	public QLSVController(QLSVViewStudent viewstu) {
+		this.viewstu = viewstu;
 	}
 	
 	public QLSVController(QLSVView view) {
@@ -32,6 +46,14 @@ public class QLSVController implements Action{
 		if(actionCommand.equals("Đăng nhập")) {
 			this.login.loginView();
 		}
+		if(actionCommand.equals("Cơ sở dữ liệu thông tin sinh viên")) {
+			this.chosen.truycapCSDL();
+		}
+		else if(actionCommand.equals("Tra cứu thông tin sinh viên")) {
+			this.chosen.truycapTracuu();
+			this.viewstu.openFile();
+		}
+			
 		if(actionCommand.equals("Thêm")) {
 			this.view.deleteForm();
 		}
@@ -50,14 +72,40 @@ public class QLSVController implements Action{
 		}
 		else if(actionCommand.equals("Hủy")) {
 			this.view.deleteForm();
-			if(this.view.system.getChoosen().equals("Tìm")) {
-				this.view.cancelFind();
-				this.view.system.setChoosen("");
-			}
 		}
 		else if(actionCommand.equals("Tìm")) {
 			this.view.find();
-			this.view.system.setChoosen("Tìm");
+		}
+		else if(actionCommand.equals("Hủy tìm")) {
+			this.view.loadData();
+		}
+		else if(actionCommand.equals("Open")) {
+			this.view.openFile();
+		}
+		else if(actionCommand.equals("Save")) {
+			this.view.saveFile();
+		}
+		else if(actionCommand.equals("Exit")) {
+			this.view.exit();
+		}
+		else if(actionCommand.equals("Quay về")) {
+			this.view.back();
+		}
+		
+		if(actionCommand.equals("Tra cứu")) {
+			this.viewstu.tracuu();
+		}
+		else if(actionCommand.equals("Hủy bỏ")) {
+			this.viewstu.deleteForm();
+		}
+		else if(actionCommand.equals("Quay lại")) {
+			this.viewstu.back();
+		}
+		else if(actionCommand.equals("Open File")) {
+			this.viewstu.openFile();
+		}
+		else if(actionCommand.equals("exit")) {
+			this.viewstu.exit();
 		}
 	}
 
