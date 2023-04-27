@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.FileNotFoundException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,6 +52,11 @@ import java.sql.PreparedStatement;
 
 import java.text.Normalizer;
 import java.util.regex.Pattern;
+
+import java.util.Scanner;
+
+import java.text.SimpleDateFormat;
+
 
 public class QLSVView extends JFrame {
 
@@ -580,20 +586,41 @@ public class QLSVView extends JFrame {
 
 	
 	public void open(File file) {
-		ArrayList ds = new ArrayList();
-		try {
-			this.system.setFileName(file.getAbsolutePath());
-			FileInputStream fis = new FileInputStream(file);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			Student sinhvien = null;
-			while((sinhvien = (Student) ois.readObject())!=null) {
-				ds.add(sinhvien);
-			}
-			ois.close();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+		JFileChooser fileChooser = new JFileChooser();
+		int result = fileChooser.showOpenDialog(null);
+		if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            String filePath = selectedFile.getAbsolutePath();
+            String line;
+            String cvsSplitBy = ",";
+            try (Scanner scanner = new Scanner(new File(filePath))) {
+
+                while (scanner.hasNextLine()) {
+                    line = scanner.nextLine();
+                    String[] data = line.split(cvsSplitBy);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+                    Student sinhvien = new Student(data[1], data[0], Faculty.getFacultybyName(data[2]), dateFormat.parse(data[3]), Boolean.parseBoolean(data[4]), Integer.parseInt(data[5]), Float.parseFloat(data[7]),Float.parseFloat(data[6]));
+                    insert(sinhvien);
+                }
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
 		}
-		this.system.setDsSinhVien(ds);
+//		ArrayList ds = new ArrayList();
+//		try {
+//			this.system.setFileName(file.getAbsolutePath());
+//			FileInputStream fis = new FileInputStream(file);
+//			ObjectInputStream ois = new ObjectInputStream(fis);
+//			Student sinhvien = null;
+//			while((sinhvien = (Student) ois.readObject())!=null) {
+//				ds.add(sinhvien);
+//			}
+//			ois.close();
+//		} catch (Exception e) {
+//			System.out.println(e.getMessage());
+//		}
+//		this.system.setDsSinhVien(ds);
 	}
 	
 	public void saveFile() {
