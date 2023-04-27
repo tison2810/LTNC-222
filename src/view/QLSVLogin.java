@@ -18,6 +18,10 @@ import javax.swing.JButton;
 import javax.swing.JPasswordField;
 
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 
 public class QLSVLogin extends JFrame {
@@ -100,12 +104,24 @@ public class QLSVLogin extends JFrame {
 		String username = this.textField_username.getText();
 		char[] passwordChar = this.passwordField.getPassword();
 		String password = new String(passwordChar);
-		if(username.equals("admin") && (password.equals("123"))) {
-			new QLSVChoose();
-			dispose();
-		}
-		else {
-			JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu sai. Vui lòng kiểm tra lại");
+		try {
+			Connection con =DriverManager.getConnection("jdbc:mysql://localhost:3306/test_1","root","");
+			
+			Statement stm = con.createStatement();
+			String query = "SELECT * FROM qlsv WHERE ID = '"+username+"'  AND Pass = '"+password+"'";
+		    ResultSet rs = stm.executeQuery(query);
+		    if (rs.next()) {
+		       	new QLSVView();
+		       	dispose();
+		       
+		    } else {
+		    	JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu sai. Vui lòng kiểm tra lại");
+		    }
+		    rs.close();
+		    stm.close();
+		    con.close();
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
