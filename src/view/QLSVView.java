@@ -51,6 +51,8 @@ import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 
 import java.text.Normalizer;
+import java.text.ParseException;
+
 import java.util.regex.Pattern;
 
 import java.util.Scanner;
@@ -598,8 +600,15 @@ public class QLSVView extends JFrame {
                 while (scanner.hasNextLine()) {
                     line = scanner.nextLine();
                     String[] data = line.split(cvsSplitBy);
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-                    Student sinhvien = new Student(data[1], data[0], Faculty.getFacultybyName(data[2]), dateFormat.parse(data[3]), Boolean.parseBoolean(data[4]), Integer.parseInt(data[5]), Float.parseFloat(data[7]),Float.parseFloat(data[6]));
+                    String dateString = data[3];
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = null;
+                    try {
+                        date = dateFormat.parse(dateString);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Student sinhvien = new Student(data[1], data[0], Faculty.getFacultybyName(data[2]), date, Boolean.parseBoolean(data[4]), Integer.parseInt(data[5]), Float.parseFloat(data[7]),Float.parseFloat(data[6]));
                     insert(sinhvien);
                 }
 
