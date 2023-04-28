@@ -17,6 +17,8 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 
 import model.Faculty;
 import model.QLSVSystem;
@@ -27,7 +29,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.FileNotFoundException;
 import java.io.File;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
@@ -41,6 +48,23 @@ import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+
+import java.text.Normalizer;
+import java.text.ParseException;
+
+import java.util.regex.Pattern;
+
+import java.util.Scanner;
+
+import java.text.SimpleDateFormat;
+
 
 public class QLSVView extends JFrame {
 
@@ -384,6 +408,7 @@ public class QLSVView extends JFrame {
 		if(!this.system.checkExist(sinhvien)) {
 			this.system.insert(sinhvien);
 			this.insert(sinhvien);
+			this.addStudentToMySQL(sinhvien);
 		}
 		else {
 			this.system.update(sinhvien);
@@ -402,6 +427,8 @@ public class QLSVView extends JFrame {
 					model_table.setValueAt(sinhvien.getGpa_10(), i, 7);
 				}
 			}
+			this.deleteStudentFromMySQL(sinhvien);
+			this.addStudentToMySQL(sinhvien);
 		}
 	}
 	
@@ -464,6 +491,7 @@ public class QLSVView extends JFrame {
 			Student sinhvien = getStudent();
 			this.system.delete(sinhvien);
 			tableModel.removeRow(row);
+			this.deleteStudentFromMySQL(sinhvien);
 		}
 	}
 
@@ -554,32 +582,64 @@ public class QLSVView extends JFrame {
 		}
 	}
 	
-	public void openFile() {
-		JFileChooser fc = new JFileChooser();
-		int returnVal = fc.showOpenDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			open(file);
-			loadData();
-		} 
-	}
+//	public void openFile() {
+//		JFileChooser fc = new JFileChooser();
+//		int returnVal = fc.showOpenDialog(this);
+//		if (returnVal == JFileChooser.APPROVE_OPTION) {
+//			File file = fc.getSelectedFile();
+//			open(file);
+//			loadData();
+//		} 
+//	}
 
 	
-	public void open(File file) {
-		ArrayList ds = new ArrayList();
-		try {
-			this.system.setFileName(file.getAbsolutePath());
-			FileInputStream fis = new FileInputStream(file);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			Student sinhvien = null;
-			while((sinhvien = (Student) ois.readObject())!=null) {
-				ds.add(sinhvien);
-			}
-			ois.close();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+	public void open() {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Select a CSV file");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("CSV files", "csv"));
+		int result = fileChooser.showOpenDialog(null);
+		ArrayList<Student> ds = new ArrayList<Student>();
+		if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split(",");
+                    String dateString = data[3];
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                    Date date = null;
+                    try {
+                        date = dateFormat.parse(dateString);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Student sinhvien = new Student(data[2], data[0], Faculty.getFacultybyName(data[1]), date, (data[4].equals("Nam")), Integer.parseInt(data[5]), Float.parseFloat(data[7]),Float.parseFloat(data[6]));
+                    ds.add(sinhvien);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            this.system.setDsSinhVien(ds);
 		}
-		this.system.setDsSinhVien(ds);
+		DefaultTableModel model_table = (DefaultTableModel) table.getModel();
+		for (Student row : ds) {
+            this.insert(row);
+        }
+//		ArrayList ds = new ArrayList();
+//		try {
+//			this.system.setFileName(file.getAbsolutePath());
+//			FileInputStream fis = new FileInputStream(file);
+//			ObjectInputStream ois = new ObjectInputStream(fis);
+//			Student sinhvien = null;
+//			while((sinhvien = (Student) ois.readObject())!=null) {
+//				ds.add(sinhvien);
+//			}
+//			ois.close();
+//		} catch (Exception e) {
+//			System.out.println(e.getMessage());
+//		}
+//		this.system.setDsSinhVien(ds);
 	}
 	
 	public void saveFile() {
@@ -608,5 +668,49 @@ public class QLSVView extends JFrame {
 			e.printStackTrace();
 		}
 	}
+	
+	public boolean addStudentToMySQL(Student stu) {
+		String sqlQuery = "INSERT INTO qlsv (`Họ và tên`, Khoa, MSSV, `Ngày sinh`, `Giới tính`, `Tín chỉ tích lũy`, `GPA (hệ 4)`, `GPA (hệ 10)`, Pass, Mail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		try {
+			Connection con =DriverManager.getConnection("jdbc:mysql://localhost:3306/test_1","root","");
+			PreparedStatement ps = con.prepareStatement(sqlQuery);
+			ps.setString(1, stu.getHoTen());
+			ps.setString(2, stu.getKhoa().getTenKhoa());
+			ps.setString(3, stu.getMSSV());
+			ps.setString(4, (stu.getNgaySinh().getMonth()+1)+"/"+(stu.getNgaySinh().getDate())+"/"+(stu.getNgaySinh().getYear()+1900));
+			ps.setString(5, stu.isGioiTinh()?"Nam":"Nữ");
+			ps.setInt(6, stu.getTCTL());
+			ps.setFloat(7, stu.getGpa_4());
+			ps.setFloat(8, stu.getGpa_10());
+			ps.setString(9, (stu.getNgaySinh().getMonth()+1)+stu.getMSSV()+(stu.getNgaySinh().getDate())+(stu.getNgaySinh().getYear()+1900));
+			ps.setString(10, email(stu.getHoTen()));
+			return ps.executeUpdate()>0;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean deleteStudentFromMySQL(Student stu) {
+		String sqlQuery = "DELETE FROM qlsv WHERE MSSV = '" + stu.getMSSV() +"'";
+		try {
+			Connection con =DriverManager.getConnection("jdbc:mysql://localhost:3306/test_1","root","");
+			PreparedStatement ps = con.prepareStatement(sqlQuery);
+			ps.setString(1, stu.getMSSV());
+			return ps.executeUpdate()>0;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	
+	 public String email(String s) {
+		  
+		  String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
+		  Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+		  String name = pattern.matcher(temp).replaceAll("");
+		  return name.toLowerCase().replaceAll("\\s", ".") + "@hcmut.edu.vn";
+		 }
 
 }

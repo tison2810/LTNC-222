@@ -1,6 +1,7 @@
 package controller;
 
 import java.awt.event.ActionEvent;
+
 import java.beans.PropertyChangeListener;
 import java.util.Date;
 
@@ -13,6 +14,7 @@ import view.QLSVChoose;
 import view.QLSVLogin;
 import view.QLSVView;
 import view.QLSVViewStudent;
+
 
 public class QLSVController implements Action{
 
@@ -80,7 +82,7 @@ public class QLSVController implements Action{
 			this.view.loadData();
 		}
 		else if(actionCommand.equals("Open")) {
-			this.view.openFile();
+			this.view.open();
 		}
 		else if(actionCommand.equals("Save")) {
 			this.view.saveFile();
