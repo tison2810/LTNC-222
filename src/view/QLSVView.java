@@ -613,7 +613,7 @@ public class QLSVView extends JFrame {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    Student sinhvien = new Student(data[2], data[0], Faculty.getFacultybyName(data[1]), date, Boolean.parseBoolean(data[4]), Integer.parseInt(data[5]), Float.parseFloat(data[7]),Float.parseFloat(data[6]));
+                    Student sinhvien = new Student(data[2], data[0], Faculty.getFacultybyName(data[1]), date, (data[4].equals("Nam")), Integer.parseInt(data[5]), Float.parseFloat(data[7]),Float.parseFloat(data[6]));
                     ds.add(sinhvien);
                 }
 
