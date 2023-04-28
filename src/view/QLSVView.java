@@ -17,6 +17,8 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 
 import model.Faculty;
 import model.QLSVSystem;
@@ -29,6 +31,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileNotFoundException;
 import java.io.File;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
@@ -576,46 +582,50 @@ public class QLSVView extends JFrame {
 		}
 	}
 	
-	public void openFile() {
-		JFileChooser fc = new JFileChooser();
-		int returnVal = fc.showOpenDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			open(file);
-			loadData();
-		} 
-	}
+//	public void openFile() {
+//		JFileChooser fc = new JFileChooser();
+//		int returnVal = fc.showOpenDialog(this);
+//		if (returnVal == JFileChooser.APPROVE_OPTION) {
+//			File file = fc.getSelectedFile();
+//			open(file);
+//			loadData();
+//		} 
+//	}
 
 	
-	public void open(File file) {
+	public void open() {
 		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Select a CSV file");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("CSV files", "csv"));
 		int result = fileChooser.showOpenDialog(null);
+		ArrayList<Student> ds = new ArrayList<Student>();
 		if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            String filePath = selectedFile.getAbsolutePath();
-            String line;
-            String cvsSplitBy = ",";
-            try (Scanner scanner = new Scanner(new File(filePath))) {
-
-                while (scanner.hasNextLine()) {
-                    line = scanner.nextLine();
-                    String[] data = line.split(cvsSplitBy);
+            try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split(",");
                     String dateString = data[3];
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
                     Date date = null;
                     try {
                         date = dateFormat.parse(dateString);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    Student sinhvien = new Student(data[1], data[0], Faculty.getFacultybyName(data[2]), date, Boolean.parseBoolean(data[4]), Integer.parseInt(data[5]), Float.parseFloat(data[7]),Float.parseFloat(data[6]));
-                    insert(sinhvien);
+                    Student sinhvien = new Student(data[2], data[0], Faculty.getFacultybyName(data[1]), date, Boolean.parseBoolean(data[4]), Integer.parseInt(data[5]), Float.parseFloat(data[7]),Float.parseFloat(data[6]));
+                    ds.add(sinhvien);
                 }
 
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
+            this.system.setDsSinhVien(ds);
 		}
+		DefaultTableModel model_table = (DefaultTableModel) table.getModel();
+		for (Student row : ds) {
+            this.insert(row);
+        }
 //		ArrayList ds = new ArrayList();
 //		try {
 //			this.system.setFileName(file.getAbsolutePath());
@@ -673,7 +683,7 @@ public class QLSVView extends JFrame {
 			ps.setFloat(7, stu.getGpa_4());
 			ps.setFloat(8, stu.getGpa_10());
 			ps.setString(9, (stu.getNgaySinh().getMonth()+1)+stu.getMSSV()+(stu.getNgaySinh().getDate())+(stu.getNgaySinh().getYear()+1900));
-			//ps.setString(10, email(stu.getHoTen()));
+			ps.setString(10, email(stu.getHoTen()));
 			return ps.executeUpdate()>0;
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -695,12 +705,12 @@ public class QLSVView extends JFrame {
 	}
 	
 	
-//	 public String email(String s) {
-//		  
-//		  String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
-//		  Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-//		  String name = pattern.matcher(temp).replaceAll("");
-//		  return name.toLowerCase().replaceAll("\\s", ".") + "@hcmut.edu.vn";
-//		 }
+	 public String email(String s) {
+		  
+		  String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
+		  Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+		  String name = pattern.matcher(temp).replaceAll("");
+		  return name.toLowerCase().replaceAll("\\s", ".") + "@hcmut.edu.vn";
+		 }
 
 }

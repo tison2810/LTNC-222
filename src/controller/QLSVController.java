@@ -82,7 +82,7 @@ public class QLSVController implements Action{
 			this.view.loadData();
 		}
 		else if(actionCommand.equals("Open")) {
-			this.view.openFile();
+			this.view.open();
 		}
 		else if(actionCommand.equals("Save")) {
 			this.view.saveFile();
