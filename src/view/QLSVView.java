@@ -346,7 +346,7 @@ public class QLSVView extends JFrame {
 		JButton btnData = new JButton("Lấy dữ liệu");
 		btnData.addActionListener(action);
 		btnData.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnData.setBounds(868, 23, 97, 21);
+		btnData.setBounds(845, 23, 140, 21);
 		contentPane.add(btnData);
 		
 		
