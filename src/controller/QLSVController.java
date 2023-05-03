@@ -93,6 +93,9 @@ public class QLSVController implements Action{
 		else if(actionCommand.equals("Quay về")) {
 			this.view.back();
 		}
+		else if(actionCommand.equals("Lấy dữ liệu")) {
+			this.view.getDataMySQL();
+		}
 		
 		if(actionCommand.equals("Tra cứu")) {
 			this.viewstu.tracuu();

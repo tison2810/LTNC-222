@@ -55,6 +55,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
+import java.sql.ResultSetMetaData;
 
 import java.text.Normalizer;
 import java.text.ParseException;
@@ -342,6 +343,12 @@ public class QLSVView extends JFrame {
 		btnBack.setBounds(0, 0, 113, 38);
 		contentPane.add(btnBack);
 		
+		JButton btnData = new JButton("Lấy dữ liệu");
+		btnData.addActionListener(action);
+		btnData.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnData.setBounds(868, 23, 97, 21);
+		contentPane.add(btnData);
+		
 		
 		this.setVisible(true);
 		
@@ -400,6 +407,7 @@ public class QLSVView extends JFrame {
 				sinhvien.getMSSV()+"", (sinhvien.getNgaySinh().getMonth()+1)+"/"+(sinhvien.getNgaySinh().getDate())+"/"+(sinhvien.getNgaySinh().getYear()+1900),
 				(sinhvien.isGioiTinh()?"Nam":"Nữ"),sinhvien.getTCTL()+"",
 				sinhvien.getGpa_4()+"",sinhvien.getGpa_10()+""});
+		this.addStudentToMySQL(sinhvien);
 	}
 	
 	//Neu sinh vien chua ton tai thi them vao he thong. Nguoc lai thi ta cap nhat thong tin sinh vien.
@@ -408,7 +416,6 @@ public class QLSVView extends JFrame {
 		if(!this.system.checkExist(sinhvien)) {
 			this.system.insert(sinhvien);
 			this.insert(sinhvien);
-			this.addStudentToMySQL(sinhvien);
 		}
 		else {
 			this.system.update(sinhvien);
@@ -622,10 +629,12 @@ public class QLSVView extends JFrame {
             }
             this.system.setDsSinhVien(ds);
 		}
-		DefaultTableModel model_table = (DefaultTableModel) table.getModel();
-		for (Student row : ds) {
-            this.insert(row);
-        }
+		this.loadData();
+//		DefaultTableModel model_table = (DefaultTableModel) table.getModel();
+//		for (Student row : ds) {
+//            this.insert(row);
+//            this.insertOrUpdate(row);
+//        }
 //		ArrayList ds = new ArrayList();
 //		try {
 //			this.system.setFileName(file.getAbsolutePath());
@@ -712,5 +721,53 @@ public class QLSVView extends JFrame {
 		  String name = pattern.matcher(temp).replaceAll("");
 		  return name.toLowerCase().replaceAll("\\s", ".") + "@hcmut.edu.vn";
 		 }
-
+	 
+	 public void getDataMySQL() {
+		 ArrayList<Student> ds = new ArrayList<Student>();
+		 String name, id;
+		 int tctl;
+		 float gpa4, gpa10;
+		 Faculty fal;
+		 boolean sex;
+		 Date date = null;
+		 try {
+			 Class.forName("com.mysql.cj.jdbc.Driver");
+			 Connection con =DriverManager.getConnection("jdbc:mysql://localhost:3306/test_1","root","");
+			 Statement stm = con.createStatement();
+			 String query = "SELECT * FROM qlsv";
+			 ResultSet rs = stm.executeQuery(query);
+//			 ResultSetMetaData rsmd = rs.getMetaData();
+//			 String[] colName = new String[cols];
+//			 for(int i = 0; i < cols; i++)
+//				 colName[i]=rsmd.getColumnName(i+1);
+//			 model.setColumnIdentifiers(colName);
+			 while(rs.next()) {
+				 name = rs.getString(1);
+				 fal = Faculty.getFacultybyName(rs.getString(2));
+				 id = rs.getString(3);
+				 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                 try {
+                     date = dateFormat.parse(rs.getString(4));
+                 } catch (ParseException e) {
+                     e.printStackTrace();
+                 }
+                 sex = rs.getString(5).equals("Nam");
+                 tctl = Integer.parseInt(rs.getString(6));
+                 gpa4 = Float.parseFloat(rs.getString(7));
+                 gpa10 = Float.parseFloat(rs.getString(8));
+                 
+                 Student sinhvien = new Student(id, name, fal, date, sex, tctl, gpa4, gpa10);
+                 ds.add(sinhvien);
+                 
+			 }
+			 rs.close();
+	         stm.close();
+	         con.close();
+	 }catch(ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+	 }
+         this.system.setDsSinhVien(ds);
+         this.loadData();
+	 }
 }
+	 
