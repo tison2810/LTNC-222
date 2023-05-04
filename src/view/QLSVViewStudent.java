@@ -196,6 +196,24 @@ public class QLSVViewStudent extends JFrame {
 		btnBKPay.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnBKPay.setBounds(70, 469, 150, 30);
 		contentPane.add(btnBKPay);
+		
+		JButton btnGitHub = new JButton("GitHub");
+		btnGitHub.addActionListener(action);
+		btnGitHub.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnGitHub.setBounds(744, 469, 150, 30);
+		contentPane.add(btnGitHub);
+		
+		JButton btnMyBK = new JButton("MyBK");
+		btnMyBK.addActionListener(action);
+		btnMyBK.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnMyBK.setBounds(283, 469, 150, 30);
+		contentPane.add(btnMyBK);
+		
+		JButton btnaao = new JButton("P. Đào tạo");
+		btnaao.addActionListener(action);
+		btnaao.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnaao.setBounds(527, 469, 150, 30);
+		contentPane.add(btnaao);
 
 		
 		this.setVisible(true);
@@ -288,6 +306,33 @@ public class QLSVViewStudent extends JFrame {
 		try {
             // open a web browser
             Desktop.getDesktop().browse(new URI("https://bkpay.hcmut.edu.vn/bkpay/home.action"));
+        } catch (IOException | URISyntaxException ex) {
+            System.out.println("Failed to open web browser");
+            ex.printStackTrace();
+        }
+	}
+	public void aao() {
+		try {
+            // open a web browser
+            Desktop.getDesktop().browse(new URI("http://www.aao.hcmut.edu.vn/"));
+        } catch (IOException | URISyntaxException ex) {
+            System.out.println("Failed to open web browser");
+            ex.printStackTrace();
+        }
+	}
+	public void MyBK() {
+		try {
+            // open a web browser
+            Desktop.getDesktop().browse(new URI("https://mybk.hcmut.edu.vn/my/index.action"));
+        } catch (IOException | URISyntaxException ex) {
+            System.out.println("Failed to open web browser");
+            ex.printStackTrace();
+        }
+	}
+	public void linkToGitHub() {
+		try {
+            // open a web browser
+            Desktop.getDesktop().browse(new URI("https://github.com/tison2810/LTNC-222"));
         } catch (IOException | URISyntaxException ex) {
             System.out.println("Failed to open web browser");
             ex.printStackTrace();
