@@ -79,13 +79,13 @@ public class QLSVController implements Action{
 			this.view.find();
 		}
 		else if(actionCommand.equals("Hủy tìm")) {
-			this.view.loadData();
+			this.view.loadData2();
 		}
 		else if(actionCommand.equals("Open")) {
 			this.view.open();
 		}
 		else if(actionCommand.equals("Save")) {
-			this.view.saveFile();
+			this.view.saveCSV();
 		}
 		else if(actionCommand.equals("Exit")) {
 			this.view.exit();
