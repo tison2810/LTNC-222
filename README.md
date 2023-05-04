@@ -1,5 +1,5 @@
 # StudentManagement
-#LTNC-222
+#LTNC-222  
 read this please  
 
 ***Đây là phần mềm quản lí sinh viên***  
@@ -27,7 +27,7 @@ username là root và không có password (để trống).
 
 Link demo: https://drive.google.com/file/d/1rUH_azmQuc4bd_JiSaf4Z0iFw7d71L3U/view?usp=share_link  
 
-Ngoài ra, về phàn `export` file csv lỗi font, có thể sửa bằng cách mở bằng Notepad++ và Encoding -> convert lại UTF-8  
+Ngoài ra, về phần `export` file csv lỗi font, có thể sửa bằng cách mở bằng Notepad++ và Encoding -> convert lại UTF-8  
 
 Thực hiện bởi:  
 Nguyễn Xuân An - 2112742  
@@ -38,5 +38,5 @@ Nếu có thắc mắc, vui lòng liên hệ qua mail: <son.nguyenthai@hcmut.edu
 
 thanks for reading  
 
-chỉnh sửa lần cuối 21:18 04/05/2023
+chỉnh sửa lần cuối 21:20 04/05/2023
 
