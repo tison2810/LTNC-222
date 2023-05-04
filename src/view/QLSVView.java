@@ -496,9 +496,9 @@ public class QLSVView extends JFrame {
 		int select = JOptionPane.showConfirmDialog(this, "Bạn xác nhận muốn xóa dòng đang chọn?");
 		if(select == JOptionPane.YES_OPTION) {
 			Student sinhvien = getStudent();
+			this.deleteStudentFromMySQL(sinhvien);
 			this.system.delete(sinhvien);
 			tableModel.removeRow(row);
-			this.deleteStudentFromMySQL(sinhvien);
 		}
 	}
 
@@ -704,9 +704,8 @@ public class QLSVView extends JFrame {
 		String sqlQuery = "DELETE FROM qlsv WHERE MSSV = '" + stu.getMSSV() +"'";
 		try {
 			Connection con =DriverManager.getConnection("jdbc:mysql://localhost:3306/test_1","root","");
-			PreparedStatement ps = con.prepareStatement(sqlQuery);
-			ps.setString(1, stu.getMSSV());
-			return ps.executeUpdate()>0;
+			Statement stm = con.createStatement();
+			return stm.executeUpdate(sqlQuery)>0;
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

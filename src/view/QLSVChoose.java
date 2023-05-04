@@ -82,8 +82,8 @@ public class QLSVChoose extends JFrame {
 		dispose();
 	}
 
-	public void truycapTracuu() {
-		new QLSVViewStudent();
-		dispose();
-	}
+//	public void truycapTracuu() {
+//		new QLSVViewStudent();
+//		dispose();
+//	}
 }

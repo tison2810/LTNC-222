@@ -51,10 +51,10 @@ public class QLSVController implements Action{
 		if(actionCommand.equals("Cơ sở dữ liệu thông tin sinh viên")) {
 			this.chosen.truycapCSDL();
 		}
-		else if(actionCommand.equals("Tra cứu thông tin sinh viên")) {
-			this.chosen.truycapTracuu();
-			this.viewstu.openFile();
-		}
+//		else if(actionCommand.equals("Tra cứu thông tin sinh viên")) {
+//			this.chosen.truycapTracuu();
+//			this.viewstu.openFile();
+//		}
 			
 		if(actionCommand.equals("Thêm")) {
 			this.view.deleteForm();
@@ -108,6 +108,9 @@ public class QLSVController implements Action{
 		}
 		else if(actionCommand.equals("Open File")) {
 			this.viewstu.openFile();
+		}
+		else if(actionCommand.equals("Đóng học phí")) {
+			this.viewstu.pay();
 		}
 		else if(actionCommand.equals("exit")) {
 			this.viewstu.exit();
