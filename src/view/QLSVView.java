@@ -669,7 +669,7 @@ public class QLSVView extends JFrame {
                     }
                     bw.newLine();
                 }
-                JOptionPane.showMessageDialog(this, "SUCCESSFULLY LOADED","INFORMATION",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhấn OK để tắt thông báo","Lưu thành công",JOptionPane.INFORMATION_MESSAGE);
                 bw.close();
                 fw.close();
             } catch (IOException ex) {
