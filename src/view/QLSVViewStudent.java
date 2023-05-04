@@ -214,7 +214,7 @@ public class QLSVViewStudent extends JFrame {
 	}
 
 	public void back() {
-		new QLSVChoose();
+		new QLSVLogin();
 		dispose();
 	}
 	

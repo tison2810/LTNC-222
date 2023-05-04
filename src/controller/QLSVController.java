@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 
 import model.Faculty;
 import model.Student;
-import view.QLSVChoose;
+//import view.QLSVChoose;
 import view.QLSVLogin;
 import view.QLSVView;
 import view.QLSVViewStudent;
@@ -22,7 +22,7 @@ public class QLSVController implements Action{
 	
 	private QLSVLogin login;
 	
-	private QLSVChoose chosen;
+//	private QLSVChoose chosen;
 	
 	private QLSVViewStudent viewstu;
 	
@@ -30,9 +30,9 @@ public class QLSVController implements Action{
 		this.login = login;
 	}
 	
-	public QLSVController(QLSVChoose chosen) {
-		this.chosen = chosen;
-	}
+//	public QLSVController(QLSVChoose chosen) {
+//		this.chosen = chosen;
+//	}
 	
 	public QLSVController(QLSVViewStudent viewstu) {
 		this.viewstu = viewstu;
@@ -48,9 +48,9 @@ public class QLSVController implements Action{
 		if(actionCommand.equals("Đăng nhập")) {
 			this.login.loginView();
 		}
-		if(actionCommand.equals("Cơ sở dữ liệu thông tin sinh viên")) {
-			this.chosen.truycapCSDL();
-		}
+//		if(actionCommand.equals("Cơ sở dữ liệu thông tin sinh viên")) {
+//			this.chosen.truycapCSDL();
+//		}
 //		else if(actionCommand.equals("Tra cứu thông tin sinh viên")) {
 //			this.chosen.truycapTracuu();
 //			this.viewstu.openFile();

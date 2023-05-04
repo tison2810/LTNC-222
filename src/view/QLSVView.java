@@ -573,7 +573,7 @@ public class QLSVView extends JFrame {
 			    "Back",
 			    JOptionPane.YES_NO_OPTION);
 		if (luaChon == JOptionPane.YES_OPTION) {
-			new QLSVChoose();
+			new QLSVLogin();
 			dispose();
 		}
 	}
