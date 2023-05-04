@@ -9,9 +9,11 @@ Sinh viên có username là MSSV và password là tháng + MSSV + ngày + năm s
 
 Có 2 cách để chạy chương trình:  
 
-Cách 1: Sử dụng Eclipse IDE và chạy bằng file Test.java -> Run as Java Application  
+Cách 1: Sử dụng Eclipse IDE và chạy bằng file Test.java -> Run as Java Application.  
 
-Cách 2: Export file Test ra file có đuôi .jar (đã đính kèm sẵn StudentManagement.jar)  
+Cách 2: Sử dụng VSCode và chạy bằng file Test.java chọn Run Java.
+
+Cách 3: Export file Test ra file có đuôi .jar (đã đính kèm sẵn StudentManagement.jar)  
 LƯU Ý: Nếu sử dụng cách 2, `java -version` và `javac -version` phải cùng phiên bản, đồng thời phải có JDK.  
 
 MySQL được sử dụng thông qua XAMPP.  
