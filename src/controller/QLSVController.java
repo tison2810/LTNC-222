@@ -112,6 +112,16 @@ public class QLSVController implements Action{
 		else if(actionCommand.equals("Đóng học phí")) {
 			this.viewstu.pay();
 		}
+		else if(actionCommand.equals("P. Đào tạo")) {
+			this.viewstu.aao();
+		}
+		else if(actionCommand.equals("MyBK")) {
+			this.viewstu.MyBK();
+		}
+		else if(actionCommand.equals("GitHub")) {
+			this.viewstu.linkToGitHub();
+		}
+		
 		else if(actionCommand.equals("exit")) {
 			this.viewstu.exit();
 		}
