@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 
 import model.Faculty;
 import model.Student;
-import view.QLSVChoose;
+//import view.QLSVChoose;
 import view.QLSVLogin;
 import view.QLSVView;
 import view.QLSVViewStudent;
@@ -22,7 +22,7 @@ public class QLSVController implements Action{
 	
 	private QLSVLogin login;
 	
-	private QLSVChoose chosen;
+//	private QLSVChoose chosen;
 	
 	private QLSVViewStudent viewstu;
 	
@@ -30,9 +30,9 @@ public class QLSVController implements Action{
 		this.login = login;
 	}
 	
-	public QLSVController(QLSVChoose chosen) {
-		this.chosen = chosen;
-	}
+//	public QLSVController(QLSVChoose chosen) {
+//		this.chosen = chosen;
+//	}
 	
 	public QLSVController(QLSVViewStudent viewstu) {
 		this.viewstu = viewstu;
@@ -48,13 +48,13 @@ public class QLSVController implements Action{
 		if(actionCommand.equals("Đăng nhập")) {
 			this.login.loginView();
 		}
-		if(actionCommand.equals("Cơ sở dữ liệu thông tin sinh viên")) {
-			this.chosen.truycapCSDL();
-		}
-		else if(actionCommand.equals("Tra cứu thông tin sinh viên")) {
-			this.chosen.truycapTracuu();
-			this.viewstu.openFile();
-		}
+//		if(actionCommand.equals("Cơ sở dữ liệu thông tin sinh viên")) {
+//			this.chosen.truycapCSDL();
+//		}
+//		else if(actionCommand.equals("Tra cứu thông tin sinh viên")) {
+//			this.chosen.truycapTracuu();
+//			this.viewstu.openFile();
+//		}
 			
 		if(actionCommand.equals("Thêm")) {
 			this.view.deleteForm();
@@ -79,19 +79,22 @@ public class QLSVController implements Action{
 			this.view.find();
 		}
 		else if(actionCommand.equals("Hủy tìm")) {
-			this.view.loadData();
+			this.view.loadData2();
 		}
 		else if(actionCommand.equals("Open")) {
 			this.view.open();
 		}
 		else if(actionCommand.equals("Save")) {
-			this.view.saveFile();
+			this.view.saveCSV();
 		}
 		else if(actionCommand.equals("Exit")) {
 			this.view.exit();
 		}
 		else if(actionCommand.equals("Quay về")) {
 			this.view.back();
+		}
+		else if(actionCommand.equals("Lấy dữ liệu")) {
+			this.view.getDataMySQL();
 		}
 		
 		if(actionCommand.equals("Tra cứu")) {
@@ -105,6 +108,9 @@ public class QLSVController implements Action{
 		}
 		else if(actionCommand.equals("Open File")) {
 			this.viewstu.openFile();
+		}
+		else if(actionCommand.equals("Đóng học phí")) {
+			this.viewstu.pay();
 		}
 		else if(actionCommand.equals("exit")) {
 			this.viewstu.exit();
