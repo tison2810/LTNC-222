@@ -96,7 +96,7 @@ public class QLSVViewStudent extends JFrame {
 		JButton btn_back = new JButton("Quay lại");
 		btn_back.addActionListener(action);
 		btn_back.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btn_back.setBounds(10, 11, 95, 36);
+		btn_back.setBounds(10, 11, 110, 36);
 		contentPane.add(btn_back);
 		
 		JSeparator separator = new JSeparator();
@@ -236,31 +236,31 @@ public class QLSVViewStudent extends JFrame {
 		dispose();
 	}
 	
-	public void openFile() {
-		JFileChooser fc = new JFileChooser();
-		int returnVal = fc.showOpenDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			open(file);
-		} 
-	}
+//	public void openFile() {
+//		JFileChooser fc = new JFileChooser();
+//		int returnVal = fc.showOpenDialog(this);
+//		if (returnVal == JFileChooser.APPROVE_OPTION) {
+//			File file = fc.getSelectedFile();
+//			open(file);
+//		} 
+//	}
 
-	private void open(File file) {
-		ArrayList ds = new ArrayList();
-		try {
-			this.system.setFileName(file.getAbsolutePath());
-			FileInputStream fis = new FileInputStream(file);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			Student sinhvien = null;
-			while((sinhvien = (Student) ois.readObject())!=null) {
-				ds.add(sinhvien);
-			}
-			ois.close();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		this.system.setDsSinhVien(ds);;
-	}
+//	private void open(File file) {
+//		ArrayList ds = new ArrayList();
+//		try {
+//			this.system.setFileName(file.getAbsolutePath());
+//			FileInputStream fis = new FileInputStream(file);
+//			ObjectInputStream ois = new ObjectInputStream(fis);
+//			Student sinhvien = null;
+//			while((sinhvien = (Student) ois.readObject())!=null) {
+//				ds.add(sinhvien);
+//			}
+//			ois.close();
+//		} catch (Exception e) {
+//			System.out.println(e.getMessage());
+//		}
+//		this.system.setDsSinhVien(ds);;
+//	}
 
 	public void tracuu() {
 		String MSSV = this.id;

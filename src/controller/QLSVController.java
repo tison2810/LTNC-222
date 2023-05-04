@@ -106,9 +106,6 @@ public class QLSVController implements Action{
 		else if(actionCommand.equals("Quay lại")) {
 			this.viewstu.back();
 		}
-		else if(actionCommand.equals("Open File")) {
-			this.viewstu.openFile();
-		}
 		else if(actionCommand.equals("Đóng học phí")) {
 			this.viewstu.pay();
 		}
